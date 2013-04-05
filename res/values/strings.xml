@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="DefaultTheme" parent="@android:style/Theme.Light.NoTitleBar" />
+
+    <!-- app -->
+    <string name="app_name">World\'s Christian Endeavor Union</string>
+
+    <!-- URLs -->
+    <string name="urlNews">http://www.worldsceunion.org/blog/rss.php</string>
+    <string name="urlEvents">https://www.google.com/calendar/ical/j56a44ttbpq12qnck8rh5634nsijdus8%40import.calendar.google.com/public/basic.ics</string>
+
+    <!-- text -->
+    <string name="textCategories">Categories</string>
+    <string name="textNews">News</string>
+    <string name="textEvents">Events</string>
+    <string name="textContact">Contact</string>
+
+    <!-- messages -->
+    <string name="messageIOException">Couldn\'t open news feed. Maybe network down?</string>
+    <string name="messageRSSException">Couldn\'t read news feed. Please contact author.</string>
+    <string name="messageUnknownException">Unknown error: </string>
+
+    <!-- categories -->
+    <string-array name="categories">
+        <item>WCEU</item>
+        <item>America</item>
+        <item>Europe</item>
+        <item>Asia</item>
+        <item>Africa</item>
+        <item>Australia</item>
+        <item>Devotions</item>
+    </string-array>
+    <string-array name="categorieValues">
+        <item></item>
+        <item>america</item>
+        <item>europe</item>
+        <item>asia</item>
+        <item>africa</item>
+        <item>auspac</item>
+        <item>devotions</item>
+    </string-array>
+
+</resources>
