@@ -18,11 +18,16 @@ public class ArticleActivity extends Activity {
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB)
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		Cursor cursor = new NewsDatabase(getBaseContext()).getDate(getIntent()
-				.getExtras().getString("date"));
+		Cursor cursor = null;
 		WebView view = (WebView) findViewById(R.id.articleText);
 		String html = "";
 
+		/* get article */
+		// TODO: double used database - close previous cursor
+		cursor = new NewsDatabase(getBaseContext()).getDate(getIntent()
+				.getExtras().getString("date"));
+
+		/* show article */
 		if (cursor != null && view != null) {
 			html = String.format("<h2>%s</h2><h3>%s</h3><div>%s</div>",
 					cursor.getString(cursor
