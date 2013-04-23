@@ -17,14 +17,15 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.Toast;
 
+@SuppressLint("SimpleDateFormat")
 public class RefreshTask extends AsyncTask<Void, Void, Exception> {
-	public Activity activity;
+	public MainActivity activity;
 	public NewsDatabase dbNews;
 	public EventsDatabase dbEvents;
 
@@ -54,6 +55,8 @@ public class RefreshTask extends AsyncTask<Void, Void, Exception> {
 		RSSHandler handler;
 		InputSource input;
 		URL url;
+
+		dbNews.clear();
 
 		try {
 			url = new URL(activity.getString(R.string.urlNews));
@@ -88,6 +91,8 @@ public class RefreshTask extends AsyncTask<Void, Void, Exception> {
 		BufferedReader reader;
 		String line;
 		ContentValues values = new ContentValues();
+
+		dbEvents.clear();
 
 		try {
 			reader = new BufferedReader(new InputStreamReader(new URL(
@@ -168,6 +173,7 @@ public class RefreshTask extends AsyncTask<Void, Void, Exception> {
 					.show();
 
 		/* show list */
+		activity.refreshDisplay();
 		activity.findViewById(R.id.listProgress).setVisibility(View.GONE);
 
 		super.onPostExecute(e);
