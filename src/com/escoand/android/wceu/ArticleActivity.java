@@ -29,15 +29,22 @@ public class ArticleActivity extends Activity {
 
 		/* show article */
 		if (cursor != null && view != null) {
-			html = String.format("<h2>%s</h2><h3>%s</h3><div>%s</div>",
-					cursor.getString(cursor
-							.getColumnIndex(NewsDatabase.COLUMN_TITLE)),
-					cursor.getString(cursor
-							.getColumnIndex(NewsDatabase.COLUMN_AUTHOR)),
-					cursor.getString(cursor
-							.getColumnIndex(NewsDatabase.COLUMN_TEXT)));
+			html = String
+					.format("<html><head>"
+							+ "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">"
+							+ "</head><body>"
+							+ "<h2>%s</h2><h3>%s</h3><div>%s</div>"
+							+ "</body></html>",
+							cursor.getString(cursor
+									.getColumnIndex(NewsDatabase.COLUMN_TITLE)),
+							cursor.getString(cursor
+									.getColumnIndex(NewsDatabase.COLUMN_AUTHOR)),
+							cursor.getString(
+									cursor.getColumnIndex(NewsDatabase.COLUMN_TEXT))
+									.replace("href=\"../",
+											"href=\"http://www.worldsceunion.org/"));
 
-			view.loadData(html, "text/html", "utf-8");
+			view.loadData(html, "text/html", "UTF-8");
 
 			cursor.close();
 		}
