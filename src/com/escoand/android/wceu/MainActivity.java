@@ -21,7 +21,9 @@ public class MainActivity extends FragmentActivity implements
 	private NewsDatabase dbNews;
 	private EventsDatabase dbEvents;
 	private ListAdapter adp;
-	private DIPLAY_TYPE type = DIPLAY_TYPE.DISPLAY_NEWS;
+
+	private DIPLAY_TYPE displayType = DIPLAY_TYPE.DISPLAY_NEWS;
+	private String displayFilter = "";
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -37,7 +39,7 @@ public class MainActivity extends FragmentActivity implements
 		ListView list = (ListView) findViewById(R.id.listNews);
 		list.setEmptyView(findViewById(R.id.listEmpty));
 		list.setAdapter(adp);
-		onCategorySelected(null);
+		refreshDisplay();
 
 		/* listeners */
 		findViewById(R.id.listRefresh).setOnClickListener(
@@ -67,12 +69,14 @@ public class MainActivity extends FragmentActivity implements
 
 		/* news */
 		case R.id.menuNews:
-			onCategorySelected(null);
+			displayType = DIPLAY_TYPE.DISPLAY_NEWS;
+			refreshDisplay();
 			break;
 
 		/* events */
 		case R.id.menuEvents:
-			adp.changeCursor(dbEvents.getList());
+			displayType = DIPLAY_TYPE.DISPLAY_EVENTS;
+			refreshDisplay();
 			break;
 
 		/* refresh */
@@ -86,25 +90,32 @@ public class MainActivity extends FragmentActivity implements
 
 	@Override
 	public void onCategorySelected(final String category) {
+		displayFilter = category;
+		refreshDisplay();
+	}
+
+	public void refreshDisplay() {
 		final ImageView banner = (ImageView) findViewById(R.id.banner);
 
 		/* news */
-		if (type == DIPLAY_TYPE.DISPLAY_NEWS) {
-			if (category == null || category.equals(""))
+		if (displayType == DIPLAY_TYPE.DISPLAY_NEWS) {
+			adp.changeCursor(dbNews.getList());
+			if (displayFilter == null || displayFilter.equals(""))
 				adp.changeCursor(dbNews.getList());
 			else {
 				adp.changeCursor(dbNews.getList(NewsDatabase.COLUMN_CATEGORY
-						+ "=?", new String[] { category }));
+						+ "=?", new String[] { displayFilter }));
 			}
 		}
 
 		/* events */
-		else if (type == DIPLAY_TYPE.DISPLAY_EVENTS) {
-			if (category == null || category.equals(""))
+		else if (displayType == DIPLAY_TYPE.DISPLAY_EVENTS) {
+			adp.changeCursor(dbEvents.getList());
+			if (displayFilter == null || displayFilter.equals(""))
 				adp.changeCursor(dbEvents.getList());
 			else {
 				adp.changeCursor(dbEvents.getList(NewsDatabase.COLUMN_CATEGORY
-						+ "=?", new String[] { category }));
+						+ "=?", new String[] { displayFilter }));
 			}
 		}
 
@@ -112,25 +123,15 @@ public class MainActivity extends FragmentActivity implements
 
 		/* banner */
 		if (cursor.getCount() > 0) {
-			if (cursor.getString(
-					cursor.getColumnIndex(NewsDatabase.COLUMN_CATEGORY))
-					.equals("africa"))
+			if (displayFilter.equals("africa"))
 				banner.setImageResource(R.drawable.banner_africa);
-			else if (cursor.getString(
-					cursor.getColumnIndex(NewsDatabase.COLUMN_CATEGORY))
-					.equals("america"))
+			else if (displayFilter.equals("america"))
 				banner.setImageResource(R.drawable.banner_america);
-			else if (cursor.getString(
-					cursor.getColumnIndex(NewsDatabase.COLUMN_CATEGORY))
-					.equals("asia"))
+			else if (displayFilter.equals("asia"))
 				banner.setImageResource(R.drawable.banner_asia);
-			else if (cursor.getString(
-					cursor.getColumnIndex(NewsDatabase.COLUMN_CATEGORY))
-					.equals("auspac"))
+			else if (displayFilter.equals("auspac"))
 				banner.setImageResource(R.drawable.banner_auspac);
-			else if (cursor.getString(
-					cursor.getColumnIndex(NewsDatabase.COLUMN_CATEGORY))
-					.equals("europe"))
+			else if (displayFilter.equals("europe"))
 				banner.setImageResource(R.drawable.banner_europe);
 			else if (banner != null)
 				banner.setImageResource(R.drawable.banner_wceu);
