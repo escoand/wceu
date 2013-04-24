@@ -16,7 +16,8 @@ public class ArticleActivity extends Activity {
 		setContentView(R.layout.article);
 
 		/* action bar */
-		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB)
+		// TODO make back button functional
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		Cursor cursor = null;
@@ -45,7 +46,7 @@ public class ArticleActivity extends Activity {
 									.replace("href=\"../",
 											"href=\"http://www.worldsceunion.org/"));
 
-			view.loadData(html, "text/html", "UTF-8");
+			view.loadData(html, "text/html; charset=utf-8", "UTF-8");
 
 			cursor.close();
 		}
