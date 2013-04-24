@@ -1,6 +1,12 @@
 package com.escoand.android.wceu;
 
-import android.database.Cursor;
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.ActionBar.TabListener;
+import android.app.FragmentTransaction;
+import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
@@ -14,21 +20,24 @@ import com.escoand.android.wceu.CategoryDialog.CategoryDialogListener;
 public class MainActivity extends FragmentActivity implements
 		CategoryDialogListener {
 
-	private enum DIPLAY_TYPE {
-		DISPLAY_NEWS, DISPLAY_EVENTS
-	};
-
 	private NewsDatabase dbNews;
 	private EventsDatabase dbEvents;
 	private ListAdapter adp;
 
-	private DIPLAY_TYPE displayType = DIPLAY_TYPE.DISPLAY_NEWS;
+	private String displayType = "news";
 	private String displayFilter = "";
 
+	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+
+		/* load settings */
+		if (savedInstanceState != null) {
+			displayType = savedInstanceState.getString("displayType");
+			displayFilter = savedInstanceState.getString("displayFilter");
+		}
 
 		/* data */
 		dbNews = new NewsDatabase(getBaseContext());
@@ -49,6 +58,59 @@ public class MainActivity extends FragmentActivity implements
 						refreshData();
 					}
 				});
+		if (findViewById(R.id.banner) != null)
+			findViewById(R.id.banner).setOnClickListener(
+					new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							CategoryDialog diag = new CategoryDialog();
+							diag.show(getSupportFragmentManager(), "");
+						}
+					});
+
+		/* action bar */
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			ActionBar actionBar = getActionBar();
+			actionBar.setDisplayShowTitleEnabled(false);
+			if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+				actionBar.setDisplayShowHomeEnabled(false);
+
+			TabListener tabl = new ActionBar.TabListener() {
+				@Override
+				public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+				}
+
+				@SuppressLint("NewApi")
+				@Override
+				public void onTabSelected(Tab tab, FragmentTransaction ft) {
+					if (tab.getText().equals(getString(R.string.menuNews)))
+						displayType = "news";
+					else if (tab.getText().equals(
+							getString(R.string.menuEvents)))
+						displayType = "events";
+					refreshDisplay();
+				}
+
+				@Override
+				public void onTabReselected(Tab tab, FragmentTransaction ft) {
+					onTabSelected(tab, ft);
+				}
+			};
+
+			/* tabs */
+			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+			actionBar.addTab(actionBar.newTab().setText(R.string.menuNews)
+					.setTabListener(tabl));
+			actionBar.addTab(actionBar.newTab().setText(R.string.menuEvents)
+					.setTabListener(tabl));
+		}
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		outState.putString("displayType", displayType);
+		outState.putString("displayFilter", displayFilter);
+		super.onSaveInstanceState(outState);
 	}
 
 	@Override
@@ -61,22 +123,22 @@ public class MainActivity extends FragmentActivity implements
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch (item.getItemId()) {
 
-		/* categories */
-		case R.id.menuCategory:
-			CategoryDialog diag = new CategoryDialog();
-			diag.show(getSupportFragmentManager(), "test");
-			break;
-
 		/* news */
 		case R.id.menuNews:
-			displayType = DIPLAY_TYPE.DISPLAY_NEWS;
+			displayType = "news";
 			refreshDisplay();
 			break;
 
 		/* events */
 		case R.id.menuEvents:
-			displayType = DIPLAY_TYPE.DISPLAY_EVENTS;
+			displayType = "events";
 			refreshDisplay();
+			break;
+
+		/* category */
+		case R.id.menuRegion:
+			CategoryDialog diag = new CategoryDialog();
+			diag.show(getSupportFragmentManager(), "");
 			break;
 
 		/* refresh */
@@ -98,7 +160,7 @@ public class MainActivity extends FragmentActivity implements
 		final ImageView banner = (ImageView) findViewById(R.id.banner);
 
 		/* news */
-		if (displayType == DIPLAY_TYPE.DISPLAY_NEWS) {
+		if (displayType.equals("news")) {
 			adp.changeCursor(dbNews.getList());
 			if (displayFilter == null || displayFilter.equals(""))
 				adp.changeCursor(dbNews.getList());
@@ -109,7 +171,7 @@ public class MainActivity extends FragmentActivity implements
 		}
 
 		/* events */
-		else if (displayType == DIPLAY_TYPE.DISPLAY_EVENTS) {
+		else if (displayType.equals("events")) {
 			adp.changeCursor(dbEvents.getList());
 			if (displayFilter == null || displayFilter.equals(""))
 				adp.changeCursor(dbEvents.getList());
@@ -119,10 +181,10 @@ public class MainActivity extends FragmentActivity implements
 			}
 		}
 
-		final Cursor cursor = adp.getCursor();
-
 		/* banner */
-		if (cursor.getCount() > 0) {
+		if (banner != null) {
+
+			/* banner image */
 			if (displayFilter.equals("africa"))
 				banner.setImageResource(R.drawable.banner_africa);
 			else if (displayFilter.equals("america"))
@@ -135,13 +197,13 @@ public class MainActivity extends FragmentActivity implements
 				banner.setImageResource(R.drawable.banner_europe);
 			else if (banner != null)
 				banner.setImageResource(R.drawable.banner_wceu);
-		}
 
-		/* banner size */
-		banner.getLayoutParams().height = (int) ((double) getWindowManager()
-				.getDefaultDisplay().getWidth()
-				/ (double) banner.getDrawable().getIntrinsicWidth() * (double) banner
-				.getDrawable().getIntrinsicHeight());
+			/* banner size */
+			banner.getLayoutParams().height = (int) ((double) getWindowManager()
+					.getDefaultDisplay().getWidth()
+					/ (double) banner.getDrawable().getIntrinsicWidth() * (double) banner
+					.getDrawable().getIntrinsicHeight());
+		}
 	}
 
 	public void refreshData() {

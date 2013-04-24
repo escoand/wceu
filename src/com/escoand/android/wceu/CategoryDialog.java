@@ -29,7 +29,7 @@ public class CategoryDialog extends DialogFragment {
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
 
-		adb.setTitle(R.string.textCategories);
+		adb.setTitle(R.string.menuRegion);
 		adb.setItems(R.array.categories, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {

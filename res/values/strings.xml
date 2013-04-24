@@ -8,13 +8,14 @@
 
     <!-- URLs -->
     <string name="urlNews">http://www.worldsceunion.org/blog/rss.php</string>
-    <string name="urlEvents">https://www.google.com/calendar/ical/j56a44ttbpq12qnck8rh5634nsijdus8%40import.calendar.google.com/public/basic.ics</string>
+    <string name="urlEvents">https://www.google.com/calendar/ical/fjfe8pr3konm0f8pjjr0ilo4c8%40group.calendar.google.com/public/basic.ics</string>
 
-    <!-- text -->
-    <string name="textCategories">Categories</string>
-    <string name="textNews">News</string>
-    <string name="textEvents">Events</string>
-    <string name="textContact">Contact</string>
+    <!-- menu -->
+    <string name="menuNews">News</string>
+    <string name="menuEvents">Events</string>
+    <string name="menuRegion">Region</string>
+    <string name="menuContact">Contact</string>
+    <string name="menuRefresh">Refresh</string>
 
     <!-- messages -->
     <string name="messageIOException">Couldn\'t open news feed. Maybe network down?</string>

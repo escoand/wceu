@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.webkit.WebView;
 
 public class ArticleActivity extends Activity {
@@ -48,5 +49,18 @@ public class ArticleActivity extends Activity {
 
 			cursor.close();
 		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+
+		/* up button clicked */
+		case android.R.id.home:
+			finish();
+			return true;
+		}
+
+		return super.onOptionsItemSelected(item);
 	}
 }
