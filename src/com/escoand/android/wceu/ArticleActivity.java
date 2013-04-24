@@ -25,7 +25,7 @@ public class ArticleActivity extends Activity {
 		String html = "";
 
 		/* get article */
-		// TODO: double used database - close previous cursor
+		// TODO double used database - close previous cursor
 		cursor = new NewsDatabase(getBaseContext()).getDate(getIntent()
 				.getExtras().getString("date"));
 
