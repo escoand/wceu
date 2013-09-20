@@ -40,12 +40,13 @@ public class EventsDatabase extends AbstractDatabase {
 
 	public Cursor getList() {
 		return getItems(new String[] { COLUMN_DATE, COLUMN_DATEEND,
-				COLUMN_TITLE, COLUMN_TEXT }, COLUMN_DATE + " desc");
+				COLUMN_TITLE, COLUMN_URL, COLUMN_CATEGORY }, COLUMN_DATE
+				+ " desc");
 	}
 
 	public Cursor getList(String selection, String[] selectionArgs) {
 		return getItems(new String[] { COLUMN_DATE, COLUMN_DATEEND,
-				COLUMN_TITLE, COLUMN_TEXT }, selection, selectionArgs,
-				COLUMN_DATE + " desc");
+				COLUMN_TITLE, COLUMN_URL, COLUMN_CATEGORY }, selection,
+				selectionArgs, COLUMN_DATE + " desc");
 	}
 }

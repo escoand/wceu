@@ -1,29 +1,23 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:support="http://schemas.android.com/apk/res-auto" >
 
     <item
-        android:id="@+id/menuNews"
-        android:icon="@android:drawable/ic_menu_sort_by_size"
-        android:title="@string/menuNews">
-    </item>
-    <item
-        android:id="@+id/menuEvents"
-        android:icon="@android:drawable/ic_menu_today"
-        android:title="@string/menuEvents">
-    </item>
-    <item
         android:id="@+id/menuRegion"
-        android:icon="@android:drawable/ic_menu_mapmode"
-        android:title="@string/menuRegion">
+        android:icon="@drawable/ic_action_region"
+        android:title="@string/menuRegion"
+        support:showAsAction="ifRoom">
     </item>
     <item
         android:id="@+id/menuContact"
-        android:icon="@android:drawable/ic_menu_send"
-        android:title="@string/menuContact">
+        android:icon="@drawable/ic_action_contact"
+        android:title="@string/menuContact"
+        support:showAsAction="ifRoom">
     </item>
     <item
         android:id="@+id/menuRefresh"
-        android:icon="@drawable/ic_menu_refresh"
-        android:title="@string/menuRefresh">
+        android:icon="@drawable/ic_action_refresh"
+        android:title="@string/menuRefresh"
+        support:showAsAction="ifRoom">
     </item>
 
 </menu>

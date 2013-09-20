@@ -95,56 +95,69 @@ public class RefreshTask extends AsyncTask<Void, Void, Exception> {
 		dbEvents.clear();
 
 		try {
-			reader = new BufferedReader(new InputStreamReader(new URL(
-					activity.getString(R.string.urlEvents)).openStream()));
+			String[] urls = activity.getResources().getStringArray(
+					R.array.urlEvents);
+			for (int i = 0; i < urls.length; i++) {
+				reader = new BufferedReader(new InputStreamReader(new URL(
+						urls[i]).openStream()));
 
-			while ((line = reader.readLine()) != null) {
+				while ((line = reader.readLine()) != null) {
 
-				try {
+					try {
 
-					/* new item */
-					if (line.equals("BEGIN:VEVENT"))
-						values.clear();
+						/* new item */
+						if (line.equals("BEGIN:VEVENT")) {
+							values.clear();
+							values.put(
+									EventsDatabase.COLUMN_CATEGORY,
+									activity.getResources().getStringArray(
+											R.array.categorieValues)[i]);
+						}
 
-					/* read data */
-					else if (line.startsWith("DTSTART")) {
-						if (line.split(":")[1].indexOf('T') > 0)
-							values.put(EventsDatabase.COLUMN_DATE,
-									dfOut.format(dfInDateTime.parse(line
-											.split(":")[1])));
-						else
-							values.put(EventsDatabase.COLUMN_DATE, dfOut
-									.format(dfInDate.parse(line.split(":")[1])));
-					} else if (line.startsWith("DTEND")) {
-						if (line.split(":")[1].indexOf('T') > 0)
-							values.put(EventsDatabase.COLUMN_DATEEND,
-									dfOut.format(dfInDateTime.parse(line
-											.split(":")[1])));
-						else
-							values.put(EventsDatabase.COLUMN_DATEEND, dfOut
-									.format(dfInDate.parse(line.split(":")[1])));
-					} else if (line.startsWith("SUMMARY"))
-						values.put(EventsDatabase.COLUMN_TITLE,
-								line.split(":")[1]);
-					else if (line.startsWith("DESCRIPTION"))
-						values.put(EventsDatabase.COLUMN_TEXT,
-								line.split(":")[1]);
-					else if (line.startsWith("LOCATION"))
-						values.put(EventsDatabase.COLUMN_URL,
-								line.split(":")[1]);
+						/* read data */
+						else if (line.startsWith("DTSTART")) {
+							if (line.split(":")[1].indexOf('T') > 0)
+								values.put(EventsDatabase.COLUMN_DATE, dfOut
+										.format(dfInDateTime.parse(line
+												.split(":")[1])));
+							else
+								values.put(EventsDatabase.COLUMN_DATE,
+										dfOut.format(dfInDate.parse(line
+												.split(":")[1])));
+						} else if (line.startsWith("DTEND")) {
+							if (line.split(":")[1].indexOf('T') > 0)
+								values.put(EventsDatabase.COLUMN_DATEEND, dfOut
+										.format(dfInDateTime.parse(line
+												.split(":")[1])));
+							else
+								values.put(EventsDatabase.COLUMN_DATEEND,
+										dfOut.format(dfInDate.parse(line
+												.split(":")[1])));
+						} else if (line.startsWith("SUMMARY"))
+							values.put(EventsDatabase.COLUMN_TITLE,
+									line.split(":")[1]);
+						else if (line.startsWith("DESCRIPTION"))
+							values.put(EventsDatabase.COLUMN_TEXT,
+									line.split(":")[1]);
+						else if (line.startsWith("LOCATION"))
+							values.put(
+									EventsDatabase.COLUMN_URL,
+									"https://maps.google.com/maps?q="
+											+ line.split(":")[1]);
 
-					/* save item */
-					else if (line.equals("END:VEVENT"))
-						dbEvents.insertItem(values);
+						/* save item */
+						else if (line.equals("END:VEVENT"))
+							dbEvents.insertItem(values);
 
-					/* error */
-				} catch (IndexOutOfBoundsException e) {
-					// e.printStackTrace();
-				} catch (ParseException e) {
-					e.printStackTrace();
+						/* error */
+					} catch (IndexOutOfBoundsException e) {
+						// e.printStackTrace();
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
 				}
+				reader.close();
 			}
-			reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			return e;

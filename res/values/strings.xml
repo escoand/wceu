@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="DefaultTheme" parent="@android:style/Theme.Light.NoTitleBar" />
-
     <!-- app -->
     <string name="app_name">World\'s Christian Endeavor Union</string>
 
     <!-- URLs -->
     <string name="urlNews">http://www.worldsceunion.org/blog/rss.php</string>
-    <string name="urlEvents">https://www.google.com/calendar/ical/fjfe8pr3konm0f8pjjr0ilo4c8%40group.calendar.google.com/public/basic.ics</string>
+
+    <string-array name="urlEvents">
+        <item>https://www.google.com/calendar/ical/wceunion%40googlemail.com/public/basic.ics</item>
+        <item>https://www.google.com/calendar/ical/daaa3gh7hekksho539jud251ic%40group.calendar.google.com/public/basic.ics</item>
+        <item>https://www.google.com/calendar/ical/pqq0q56nd2eihms28lj53roe8g%40group.calendar.google.com/public/basic.ics</item>
+        <item>https://www.google.com/calendar/ical/gfgdp3jcdrr9bn9tbdook7fbqc%40group.calendar.google.com/public/basic.ics</item>
+        <item>https://www.google.com/calendar/ical/ldnb30jt87rh3i0s8hlineqtk0%40group.calendar.google.com/public/basic.ics</item>
+        <item>https://www.google.com/calendar/ical/60s7ikvu6ulm13ihq0r9oaab40%40group.calendar.google.com/public/basic.ics</item>
+    </string-array>
+
+    <!-- spinner -->
+    <string-array name="listSpinner">
+        <item>@string/menuNews</item>
+        <item>@string/menuEvents</item>
+    </string-array>
 
     <!-- menu -->
     <string name="menuNews">News</string>

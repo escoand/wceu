@@ -8,6 +8,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ public class ListAdapter extends CursorAdapter {
 	private final String COLUMN_DATE = NewsDatabase.COLUMN_DATE;
 	private final String COLUMN_DATEEND = EventsDatabase.COLUMN_DATEEND;
 	private final String COLUMN_TITLE = NewsDatabase.COLUMN_TITLE;
+	private final String COLUMN_URL = NewsDatabase.COLUMN_URL;
 	private final String COLUMN_CATEGORY = NewsDatabase.COLUMN_CATEGORY;
 
 	private final SimpleDateFormat dfIn = new SimpleDateFormat(
@@ -84,18 +86,31 @@ public class ListAdapter extends CursorAdapter {
 		}
 		title.setText(cursor.getString(cursor.getColumnIndex(COLUMN_TITLE)));
 
-		/* tag */
-		view.setTag(cursor.getString(cursor.getColumnIndex(COLUMN_DATE)));
+		/* open url */
+		if (!cursor.isNull(cursor.getColumnIndex(COLUMN_URL))) {
+			view.setTag(cursor.getString(cursor.getColumnIndex(COLUMN_URL)));
+			view.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(Intent.ACTION_VIEW, Uri
+							.parse((String) v.getTag()));
+					v.getContext().startActivity(intent);
+				}
+			});
+		}
 
-		/* onclick */
-		view.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(v.getContext(),
-						ArticleActivity.class);
-				intent.putExtra("date", (String) v.getTag());
-				v.getContext().startActivity(intent);
-			}
-		});
+		/* open date */
+		else {
+			view.setTag(cursor.getString(cursor.getColumnIndex(COLUMN_DATE)));
+			view.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(v.getContext(),
+							ArticleActivity.class);
+					intent.putExtra("date", (String) v.getTag());
+					v.getContext().startActivity(intent);
+				}
+			});
+		}
 	}
 }

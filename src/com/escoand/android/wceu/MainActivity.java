@@ -1,23 +1,22 @@
 package com.escoand.android.wceu;
 
-import android.annotation.SuppressLint;
-import android.app.ActionBar;
-import android.app.ActionBar.Tab;
-import android.app.ActionBar.TabListener;
-import android.app.FragmentTransaction;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.Tab;
+import android.support.v7.app.ActionBar.TabListener;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.escoand.android.wceu.CategoryDialog.CategoryDialogListener;
 
-public class MainActivity extends FragmentActivity implements
+public class MainActivity extends ActionBarActivity implements
 		CategoryDialogListener {
 
 	private NewsDatabase dbNews;
@@ -27,7 +26,6 @@ public class MainActivity extends FragmentActivity implements
 	private String displayType = "news";
 	private String displayFilter = "";
 
-	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -69,40 +67,55 @@ public class MainActivity extends FragmentActivity implements
 					});
 
 		/* action bar */
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			ActionBar actionBar = getActionBar();
-			actionBar.setDisplayShowTitleEnabled(false);
-			if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
-				actionBar.setDisplayShowHomeEnabled(false);
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayShowTitleEnabled(false);
 
-			TabListener tabl = new ActionBar.TabListener() {
-				@Override
-				public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-				}
+		TabListener tabl = new ActionBar.TabListener() {
+			@Override
+			public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+			}
 
-				@SuppressLint("NewApi")
-				@Override
-				public void onTabSelected(Tab tab, FragmentTransaction ft) {
-					if (tab.getText().equals(getString(R.string.menuNews)))
-						displayType = "news";
-					else if (tab.getText().equals(
-							getString(R.string.menuEvents)))
-						displayType = "events";
-					refreshDisplay();
-				}
+			@Override
+			public void onTabSelected(Tab tab, FragmentTransaction ft) {
+				if (tab.getText().equals(getString(R.string.menuNews)))
+					displayType = "news";
+				else if (tab.getText().equals(getString(R.string.menuEvents)))
+					displayType = "events";
+				refreshDisplay();
+			}
 
-				@Override
-				public void onTabReselected(Tab tab, FragmentTransaction ft) {
-					onTabSelected(tab, ft);
-				}
-			};
+			@Override
+			public void onTabReselected(Tab tab, FragmentTransaction ft) {
+				onTabSelected(tab, ft);
+			}
+		};
 
-			/* tabs */
+		/* tabs */
+		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 			actionBar.addTab(actionBar.newTab().setText(R.string.menuNews)
 					.setTabListener(tabl));
 			actionBar.addTab(actionBar.newTab().setText(R.string.menuEvents)
 					.setTabListener(tabl));
+		}
+
+		/* dropdown */
+		else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+			actionBar.setListNavigationCallbacks(ArrayAdapter
+					.createFromResource(this, R.array.listSpinner,
+							android.R.layout.simple_spinner_dropdown_item),
+					new ActionBar.OnNavigationListener() {
+						@Override
+						public boolean onNavigationItemSelected(int pos, long id) {
+							if (pos == 0)
+								displayType = "news";
+							else if (pos == 1)
+								displayType = "events";
+							refreshDisplay();
+							return true;
+						}
+					});
 		}
 	}
 
@@ -116,24 +129,12 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch (item.getItemId()) {
-
-		/* news */
-		case R.id.menuNews:
-			displayType = "news";
-			refreshDisplay();
-			break;
-
-		/* events */
-		case R.id.menuEvents:
-			displayType = "events";
-			refreshDisplay();
-			break;
 
 		/* category */
 		case R.id.menuRegion:
