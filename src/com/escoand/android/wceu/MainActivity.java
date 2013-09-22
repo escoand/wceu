@@ -1,6 +1,11 @@
 package com.escoand.android.wceu;
 
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -208,10 +213,54 @@ public class MainActivity extends ActionBarActivity implements
 	}
 
 	public void refreshData() {
-		final RefreshTask task = new RefreshTask();
-		task.activity = this;
-		task.dbNews = dbNews;
-		task.dbEvents = dbEvents;
-		task.execute();
+		new AsyncTask<Void, Void, Void>() {
+			ThreadPoolExecutor pool = new ThreadPoolExecutor(10, 10, 10,
+					TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+
+			String[] urls = getResources().getStringArray(R.array.urlEvents);
+			String[] categories = getResources().getStringArray(
+					R.array.categorieValues);
+
+			// hide listing
+			@Override
+			protected void onPreExecute() {
+				findViewById(R.id.listProgress).setVisibility(View.VISIBLE);
+				super.onPreExecute();
+			}
+
+			@Override
+			protected Void doInBackground(Void... params) {
+
+				// refresh news
+				dbNews.clear();
+				pool.execute(new RefreshNews(getBaseContext(),
+						getString(R.string.urlNews)));
+
+				// refresh events
+				dbEvents.clear();
+				for (int i = 0; i < urls.length; i++) {
+					pool.execute(new RefreshEvents(getBaseContext(), urls[i],
+							categories[i]));
+				}
+
+				// wait for tasks
+				pool.shutdown();
+				try {
+					pool.awaitTermination(30, TimeUnit.SECONDS);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+				return null;
+			}
+
+			// show listing
+			@Override
+			protected void onPostExecute(Void result) {
+				refreshDisplay();
+				findViewById(R.id.listProgress).setVisibility(View.GONE);
+				super.onPostExecute(result);
+			}
+		}.execute();
 	}
 }
