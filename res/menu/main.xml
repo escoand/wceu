@@ -1,18 +1,17 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:support="http://schemas.android.com/apk/res-auto" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
         android:id="@+id/menuRegion"
         android:icon="@drawable/ic_action_region"
-        android:title="@string/menuRegion"
-        support:showAsAction="ifRoom">
+        android:showAsAction="ifRoom"
+        android:title="@string/menuRegion">
     </item>
     <item
         android:id="@+id/menuContact"
         android:icon="@drawable/ic_action_contact"
+        android:showAsAction="ifRoom"
         android:title="@string/menuContact"
-        android:visible="false"
-        support:showAsAction="ifRoom">
+        android:visible="false">
     </item>
 
 </menu>

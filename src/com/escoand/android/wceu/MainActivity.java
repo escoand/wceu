@@ -1,17 +1,17 @@
 package com.escoand.android.wceu;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.ActionBar.TabListener;
+import android.app.ActionBar.OnNavigationListener;
+import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBar.OnNavigationListener;
-import android.support.v7.app.ActionBar.Tab;
-import android.support.v7.app.ActionBar.TabListener;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,8 +27,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
-public class MainActivity extends ActionBarActivity implements
-		CategoryDialogListener {
+public class MainActivity extends Activity implements CategoryDialogListener {
 
 	private NewsDatabase dbNews;
 	private EventsDatabase dbEvents;
@@ -79,12 +78,12 @@ public class MainActivity extends ActionBarActivity implements
 				@Override
 				public void onClick(View v) {
 					CategoryDialog diag = new CategoryDialog();
-					diag.show(getSupportFragmentManager(), "");
+					diag.show(getFragmentManager(), "");
 				}
 			});
 
 		/* action bar */
-		ActionBar actionBar = getSupportActionBar();
+		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowTitleEnabled(false);
 
 		TabListener tabl = new TabListener() {
@@ -156,7 +155,7 @@ public class MainActivity extends ActionBarActivity implements
 		/* category */
 		case R.id.menuRegion:
 			CategoryDialog diag = new CategoryDialog();
-			diag.show(getSupportFragmentManager(), "");
+			diag.show(getFragmentManager(), "");
 			break;
 
 		/* contact */
