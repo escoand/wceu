@@ -3,34 +3,90 @@ package com.escoand.android.wceu;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import android.annotation.SuppressLint;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+
 import android.content.ContentValues;
 import android.content.Context;
 
-@SuppressLint("SimpleDateFormat")
-public class RefreshEvents implements Runnable {
-	private EventsDatabase dbEvents;
-	private final String url;
-	private final String category;
-
-	private final SimpleDateFormat dfInDate = new SimpleDateFormat("yyyyHHdd");
-	private final SimpleDateFormat dfInDateTime = new SimpleDateFormat(
+public final class RefreshHandler {
+	final static SimpleDateFormat dfInDate = new SimpleDateFormat("yyyyHHdd");
+	final static SimpleDateFormat dfInDateTime = new SimpleDateFormat(
 			"yyyyMMdd'T'HHmmss'Z'");
-	private final SimpleDateFormat dfOut = new SimpleDateFormat(
+	final static SimpleDateFormat dfOut = new SimpleDateFormat(
 			EventsDatabase.DATE_FORMAT);
 
-	RefreshEvents(final Context context, final String url, final String category) {
-		dbEvents = new EventsDatabase(context);
-		this.url = url;
-		this.category = category;
+	public static boolean refreshAll(final Context context,
+			final NewsDatabase dbNews, final EventsDatabase dbEvents) {
+		String[] urls = context.getResources()
+				.getStringArray(R.array.urlEvents);
+		String[] categories = context.getResources().getStringArray(
+				R.array.categorieValues);
+		boolean result;
+
+		// refresh news
+		dbNews.clear();
+		result = RefreshNews(dbNews, context.getString(R.string.urlNews));
+		if (!result)
+			return false;
+
+		// refresh events
+		dbEvents.clear();
+		for (int i = 0; i < urls.length; i++) {
+			result = RefreshEvents(dbEvents, urls[i], categories[i]);
+			if (!result)
+				return false;
+		}
+
+		return result;
 	}
 
-	@Override
-	public void run() {
+	public static boolean RefreshNews(final NewsDatabase dbNews,
+			final String url) {
+		SAXParserFactory factory;
+		SAXParser parser;
+		XMLReader reader;
+		RSSHandler handler;
+		InputSource input;
+
+		try {
+			factory = SAXParserFactory.newInstance();
+			parser = factory.newSAXParser();
+			reader = parser.getXMLReader();
+			handler = new RSSHandler(dbNews);
+			input = new InputSource(new URL(url).openStream());
+
+			reader.setContentHandler(handler);
+			reader.parse(input);
+		}
+
+		/* catch errors */
+		catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			// e.printStackTrace();
+			return false;
+		}
+
+		return true;
+	}
+
+	public static boolean RefreshEvents(final EventsDatabase dbEvents,
+			final String url, final String category) {
 		BufferedReader reader;
 		String line;
 		ContentValues values = new ContentValues();
@@ -40,7 +96,6 @@ public class RefreshEvents implements Runnable {
 					new URL(url).openStream()));
 
 			while ((line = reader.readLine()) != null) {
-
 				try {
 
 					/* new item */
@@ -89,9 +144,12 @@ public class RefreshEvents implements Runnable {
 					e.printStackTrace();
 				}
 			}
+
 			reader.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			return false;
 		}
+
+		return true;
 	}
 }
