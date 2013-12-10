@@ -11,12 +11,7 @@
         android:id="@+id/menuContact"
         android:icon="@drawable/ic_action_contact"
         android:title="@string/menuContact"
-        support:showAsAction="ifRoom">
-    </item>
-    <item
-        android:id="@+id/menuRefresh"
-        android:icon="@drawable/ic_action_refresh"
-        android:title="@string/menuRefresh"
+        android:visible="false"
         support:showAsAction="ifRoom">
     </item>
 
