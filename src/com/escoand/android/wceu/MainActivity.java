@@ -7,8 +7,10 @@ import android.app.ActionBar.TabListener;
 import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -160,6 +162,10 @@ public class MainActivity extends Activity implements CategoryDialogListener {
 
 		/* contact */
 		case R.id.menuContact:
+			Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+					"mailto", "centraloffice@worldsceunion.org", null));
+			startActivity(Intent.createChooser(intent,
+					getString(R.string.messageEMail)));
 			break;
 		}
 

@@ -10,8 +10,7 @@
         android:id="@+id/menuContact"
         android:icon="@drawable/ic_action_contact"
         android:showAsAction="ifRoom"
-        android:title="@string/menuContact"
-        android:visible="false">
+        android:title="@string/menuContact">
     </item>
 
 </menu>
