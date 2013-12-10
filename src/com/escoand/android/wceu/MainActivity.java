@@ -1,8 +1,10 @@
 package com.escoand.android.wceu;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -161,6 +163,10 @@ public class MainActivity extends ActionBarActivity implements
 
 		/* contact */
 		case R.id.menuContact:
+			Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+					"mailto", "centraloffice@worldsceunion.org", null));
+			startActivity(Intent.createChooser(intent,
+					getString(R.string.messageEMail)));
 			break;
 		}
 
