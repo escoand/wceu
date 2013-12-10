@@ -1,25 +1,31 @@
 package com.escoand.android.wceu;
 
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
+import android.annotation.SuppressLint;
 import android.content.res.Configuration;
+import android.graphics.Point;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.OnNavigationListener;
 import android.support.v7.app.ActionBar.Tab;
 import android.support.v7.app.ActionBar.TabListener;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.escoand.android.wceu.CategoryDialog.CategoryDialogListener;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 public class MainActivity extends ActionBarActivity implements
 		CategoryDialogListener {
@@ -48,9 +54,16 @@ public class MainActivity extends ActionBarActivity implements
 		adp = new ListAdapter(getBaseContext());
 
 		/* list */
-		ListView list = (ListView) findViewById(R.id.listNews);
+		PullToRefreshListView list = (PullToRefreshListView) findViewById(R.id.listNews);
 		list.setEmptyView(findViewById(R.id.listEmpty));
 		list.setAdapter(adp);
+		list.setShowIndicator(true);
+		list.setOnRefreshListener(new OnRefreshListener<ListView>() {
+			@Override
+			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+				refreshData();
+			}
+		});
 		refreshDisplay();
 
 		/* listeners */
@@ -62,20 +75,19 @@ public class MainActivity extends ActionBarActivity implements
 					}
 				});
 		if (findViewById(R.id.banner) != null)
-			findViewById(R.id.banner).setOnClickListener(
-					new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							CategoryDialog diag = new CategoryDialog();
-							diag.show(getSupportFragmentManager(), "");
-						}
-					});
+			findViewById(R.id.banner).setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					CategoryDialog diag = new CategoryDialog();
+					diag.show(getSupportFragmentManager(), "");
+				}
+			});
 
 		/* action bar */
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayShowTitleEnabled(false);
 
-		TabListener tabl = new ActionBar.TabListener() {
+		TabListener tabl = new TabListener() {
 			@Override
 			public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 			}
@@ -110,7 +122,7 @@ public class MainActivity extends ActionBarActivity implements
 			actionBar.setListNavigationCallbacks(ArrayAdapter
 					.createFromResource(this, R.array.listSpinner,
 							android.R.layout.simple_spinner_dropdown_item),
-					new ActionBar.OnNavigationListener() {
+					new OnNavigationListener() {
 						@Override
 						public boolean onNavigationItemSelected(int pos, long id) {
 							if (pos == 0)
@@ -147,9 +159,8 @@ public class MainActivity extends ActionBarActivity implements
 			diag.show(getSupportFragmentManager(), "");
 			break;
 
-		/* refresh */
-		case R.id.menuRefresh:
-			refreshData();
+		/* contact */
+		case R.id.menuContact:
 			break;
 		}
 
@@ -162,6 +173,8 @@ public class MainActivity extends ActionBarActivity implements
 		refreshDisplay();
 	}
 
+	@SuppressLint("NewApi")
+	@SuppressWarnings("deprecation")
 	public void refreshDisplay() {
 		final ImageView banner = (ImageView) findViewById(R.id.banner);
 
@@ -205,60 +218,43 @@ public class MainActivity extends ActionBarActivity implements
 				banner.setImageResource(R.drawable.banner_wceu);
 
 			/* banner size */
-			banner.getLayoutParams().height = (int) ((double) getWindowManager()
-					.getDefaultDisplay().getWidth()
+			int width = 0;
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				Point size = new Point();
+				getWindowManager().getDefaultDisplay().getSize(size);
+				width = size.x;
+			} else {
+				Display d = getWindowManager().getDefaultDisplay();
+				width = d.getWidth();
+			}
+			banner.getLayoutParams().height = (int) ((double) width
 					/ (double) banner.getDrawable().getIntrinsicWidth() * (double) banner
 					.getDrawable().getIntrinsicHeight());
 		}
 	}
 
 	public void refreshData() {
-		new AsyncTask<Void, Void, Void>() {
-			ThreadPoolExecutor pool = new ThreadPoolExecutor(10, 10, 10,
-					TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
-
-			String[] urls = getResources().getStringArray(R.array.urlEvents);
-			String[] categories = getResources().getStringArray(
-					R.array.categorieValues);
-
-			// hide listing
+		new AsyncTask<Void, Void, Boolean>() {
 			@Override
-			protected void onPreExecute() {
-				findViewById(R.id.listProgress).setVisibility(View.VISIBLE);
-				super.onPreExecute();
+			protected Boolean doInBackground(Void... params) {
+				return RefreshHandler.refreshAll(getBaseContext(), dbNews,
+						dbEvents);
 			}
 
 			@Override
-			protected Void doInBackground(Void... params) {
+			protected void onPostExecute(Boolean result) {
 
-				// refresh news
-				dbNews.clear();
-				pool.execute(new RefreshNews(getBaseContext(),
-						getString(R.string.urlNews)));
+				/* show error */
+				if (!result)
+					Toast.makeText(getBaseContext(),
+							getString(R.string.messageIOException),
+							Toast.LENGTH_LONG).show();
 
-				// refresh events
-				dbEvents.clear();
-				for (int i = 0; i < urls.length; i++) {
-					pool.execute(new RefreshEvents(getBaseContext(), urls[i],
-							categories[i]));
-				}
-
-				// wait for tasks
-				pool.shutdown();
-				try {
-					pool.awaitTermination(30, TimeUnit.SECONDS);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-
-				return null;
-			}
-
-			// show listing
-			@Override
-			protected void onPostExecute(Void result) {
+				/* refresh listing */
 				refreshDisplay();
-				findViewById(R.id.listProgress).setVisibility(View.GONE);
+				((PullToRefreshListView) findViewById(R.id.listNews))
+						.onRefreshComplete();
+
 				super.onPostExecute(result);
 			}
 		}.execute();

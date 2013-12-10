@@ -10,9 +10,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="#ffffff"
+        android:contentDescription="@string/app_name"
         android:scaleType="fitStart"
-        android:scaleX="1.5"
-        android:scaleY="1.5"
         android:src="@drawable/bar_wceu" />
 
     <LinearLayout
@@ -30,14 +29,12 @@
             android:id="@+id/newsDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="date"
             android:textColor="@android:color/secondary_text_dark" />
 
         <TextView
             android:id="@+id/newsTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="title"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="bold" />
     </LinearLayout>
