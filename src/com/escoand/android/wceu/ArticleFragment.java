@@ -41,6 +41,9 @@ public class ArticleFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		if (date == null)
+			return;
+
 		Cursor cursor = null;
 		WebView view = (WebView) getActivity().findViewById(R.id.articleText);
 		String html = "";
@@ -48,27 +51,25 @@ public class ArticleFragment extends Fragment {
 		/* get article */
 		// TODO double used database - close previous cursor
 		cursor = new NewsDatabase(getActivity()).getDate(date);
+		if (cursor == null || cursor.getCount() < 1)
+			return;
 
 		/* show article */
-		if (cursor != null && cursor.getCount() >= 1) {
-			html = String
-					.format("<html><head>"
-							+ "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">"
-							+ "</head><body>"
-							+ "<h2>%s</h2><h3>%s</h3><div>%s</div>"
-							+ "</body></html>",
-							cursor.getString(cursor
-									.getColumnIndex(NewsDatabase.COLUMN_TITLE)),
-							cursor.getString(cursor
-									.getColumnIndex(NewsDatabase.COLUMN_AUTHOR)),
-							cursor.getString(
-									cursor.getColumnIndex(NewsDatabase.COLUMN_TEXT))
-									.replace("href=\"../",
-											"href=\"http://www.worldsceunion.org/"));
-
-			view.loadData(html, "text/html; charset=utf-8", "UTF-8");
-
-			cursor.close();
-		}
+		html = String
+				.format("<html><head>"
+						+ "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">"
+						+ "</head><body>"
+						+ "<h2>%s</h2><h3>%s</h3><div>%s</div>"
+						+ "</body></html>",
+						cursor.getString(cursor
+								.getColumnIndex(NewsDatabase.COLUMN_TITLE)),
+						cursor.getString(cursor
+								.getColumnIndex(NewsDatabase.COLUMN_AUTHOR)),
+						cursor.getString(
+								cursor.getColumnIndex(NewsDatabase.COLUMN_TEXT))
+								.replace("href=\"../",
+										"href=\"http://www.worldsceunion.org/"));
+		view.loadData(html, "text/html; charset=utf-8", "UTF-8");
+		cursor.close();
 	}
 }
