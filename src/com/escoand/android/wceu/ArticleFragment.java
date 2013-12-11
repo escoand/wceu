@@ -41,12 +41,15 @@ public class ArticleFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (date == null)
-			return;
-
 		Cursor cursor = null;
 		WebView view = (WebView) getActivity().findViewById(R.id.articleText);
 		String html = "";
+
+		if (savedInstanceState != null)
+			date = savedInstanceState.getString("date");
+
+		if (view == null || date == null)
+			return;
 
 		/* get article */
 		// TODO double used database - close previous cursor
@@ -69,7 +72,15 @@ public class ArticleFragment extends Fragment {
 								cursor.getColumnIndex(NewsDatabase.COLUMN_TEXT))
 								.replace("href=\"../",
 										"href=\"http://www.worldsceunion.org/"));
+		// TODO html not shown after rotate
 		view.loadData(html, "text/html; charset=utf-8", "UTF-8");
 		cursor.close();
+	}
+
+	/* fragment stopped */
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putString("date", date);
+		super.onSaveInstanceState(outState);
 	}
 }
