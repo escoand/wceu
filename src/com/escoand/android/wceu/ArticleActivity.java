@@ -2,7 +2,6 @@ package com.escoand.android.wceu;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -12,17 +11,10 @@ public class ArticleActivity extends Activity {
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-			finish();
-			return;
-		}
-
-		if (savedInstanceState == null) {
-			ArticleFragment article = new ArticleFragment();
-			article.setArguments(getIntent().getExtras());
-			getFragmentManager().beginTransaction()
-					.add(android.R.id.content, article).commit();
-		}
+		ArticleFragment article = new ArticleFragment();
+		article.setArguments(getIntent().getExtras());
+		getFragmentManager().beginTransaction()
+				.add(android.R.id.content, article).commit();
 	}
 
 	@Override
