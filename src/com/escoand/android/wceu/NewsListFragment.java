@@ -4,8 +4,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
+import android.app.ActionBar.OnNavigationListener;
+import android.app.ActionBar.Tab;
+import android.app.ActionBar.TabListener;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -19,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -68,6 +75,58 @@ public class NewsListFragment extends android.app.ListFragment implements
 		dbNews = new NewsDatabase(getActivity());
 		dbEvents = new EventsDatabase(getActivity());
 		setListAdapter(new NewsListAdapter(getActivity()));
+
+		/* action bar */
+		ActionBar actionBar = getActivity().getActionBar();
+		actionBar.setDisplayShowTitleEnabled(false);
+
+		TabListener tabl = new TabListener() {
+			@Override
+			public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+			}
+
+			@Override
+			public void onTabSelected(Tab tab, FragmentTransaction ft) {
+				if (tab.getText().equals(getString(R.string.menuNews)))
+					displayType = "news";
+				else if (tab.getText().equals(getString(R.string.menuEvents)))
+					displayType = "events";
+				refreshDisplay();
+			}
+
+			@Override
+			public void onTabReselected(Tab tab, FragmentTransaction ft) {
+				onTabSelected(tab, ft);
+			}
+		};
+
+		/* tabs */
+		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+			actionBar.addTab(actionBar.newTab().setText(R.string.menuNews)
+					.setTabListener(tabl));
+			actionBar.addTab(actionBar.newTab().setText(R.string.menuEvents)
+					.setTabListener(tabl));
+		}
+
+		/* dropdown */
+		else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+			actionBar.setListNavigationCallbacks(ArrayAdapter
+					.createFromResource(getActivity(), R.array.listSpinner,
+							android.R.layout.simple_spinner_dropdown_item),
+					new OnNavigationListener() {
+						@Override
+						public boolean onNavigationItemSelected(int pos, long id) {
+							if (pos == 0)
+								displayType = "news";
+							else if (pos == 1)
+								displayType = "events";
+							refreshDisplay();
+							return true;
+						}
+					});
+		}
 
 		/* list */
 		PullToRefreshListView list = (PullToRefreshListView) getActivity()
