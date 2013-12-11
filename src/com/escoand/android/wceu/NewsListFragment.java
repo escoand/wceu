@@ -108,6 +108,8 @@ public class NewsListFragment extends ListFragment implements
 					.setTabListener(tabl));
 			actionBar.addTab(actionBar.newTab().setText(R.string.menuEvents)
 					.setTabListener(tabl));
+			if (displayType.equals("events"))
+				actionBar.selectTab(actionBar.getTabAt(1));
 		}
 
 		/* dropdown */
@@ -127,6 +129,8 @@ public class NewsListFragment extends ListFragment implements
 							return true;
 						}
 					});
+			if (displayType.equals("events"))
+				actionBar.setSelectedNavigationItem(1);
 		}
 
 		/* list */
