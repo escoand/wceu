@@ -1,6 +1,5 @@
 package com.escoand.android.wceu;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -12,17 +11,6 @@ public class CategoryDialog extends DialogFragment {
 
 	public interface CategoryDialogListener {
 		public void onCategorySelected(String category);
-	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		try {
-			listener = (CategoryDialogListener) activity;
-		} catch (ClassCastException e) {
-			e.printStackTrace();
-		}
-
-		super.onAttach(activity);
 	}
 
 	@Override
@@ -40,5 +28,9 @@ public class CategoryDialog extends DialogFragment {
 		adb.setCancelable(true);
 
 		return adb.create();
+	}
+
+	public void setListener(CategoryDialogListener listener) {
+		this.listener = listener;
 	}
 }

@@ -176,6 +176,7 @@ public class NewsListFragment extends android.app.ListFragment implements
 		/* category */
 		case R.id.menuRegion:
 			CategoryDialog diag = new CategoryDialog();
+			diag.setListener(this);
 			diag.show(getFragmentManager(), "");
 			break;
 
