@@ -6,9 +6,7 @@ import java.text.SimpleDateFormat;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +14,7 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ListAdapter extends CursorAdapter {
+public class NewsListAdapter extends CursorAdapter {
 	private final String COLUMN_DATE = NewsDatabase.COLUMN_DATE;
 	private final String COLUMN_DATEEND = EventsDatabase.COLUMN_DATEEND;
 	private final String COLUMN_TITLE = NewsDatabase.COLUMN_TITLE;
@@ -31,7 +29,7 @@ public class ListAdapter extends CursorAdapter {
 			.getDateInstance(DateFormat.FULL);
 
 	@SuppressLint("SimpleDateFormat")
-	public ListAdapter(Context context) {
+	public NewsListAdapter(Context context) {
 		super(context, null, true);
 	}
 
@@ -71,6 +69,8 @@ public class ListAdapter extends CursorAdapter {
 
 		/* date */
 		try {
+			view.setTag(dfIn.parse(cursor.getString(cursor
+					.getColumnIndex(COLUMN_DATE))));
 			if (cursor.getColumnIndex(COLUMN_DATEEND) != -1) {
 				date.setText(dfOutShort.format(dfIn.parse(cursor
 						.getString(cursor.getColumnIndex(COLUMN_DATE))))
@@ -82,35 +82,14 @@ public class ListAdapter extends CursorAdapter {
 						.getString(cursor.getColumnIndex(COLUMN_DATE)))));
 			}
 		} catch (ParseException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
-		title.setText(cursor.getString(cursor.getColumnIndex(COLUMN_TITLE)));
 
-		/* open url */
-		if (!cursor.isNull(cursor.getColumnIndex(COLUMN_URL))) {
+		/* url */
+		if (!cursor.isNull(cursor.getColumnIndex(COLUMN_URL)))
 			view.setTag(cursor.getString(cursor.getColumnIndex(COLUMN_URL)));
-			view.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent(Intent.ACTION_VIEW, Uri
-							.parse((String) v.getTag()));
-					v.getContext().startActivity(intent);
-				}
-			});
-		}
 
-		/* open date */
-		else {
-			view.setTag(cursor.getString(cursor.getColumnIndex(COLUMN_DATE)));
-			view.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent(v.getContext(),
-							ArticleActivity.class);
-					intent.putExtra("date", (String) v.getTag());
-					v.getContext().startActivity(intent);
-				}
-			});
-		}
+		/* title */
+		title.setText(cursor.getString(cursor.getColumnIndex(COLUMN_TITLE)));
 	}
 }
