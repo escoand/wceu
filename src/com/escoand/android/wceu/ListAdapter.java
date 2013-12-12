@@ -8,6 +8,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,25 +50,16 @@ public class ListAdapter extends CursorAdapter {
 		TextView title = (TextView) view.findViewById(R.id.newsTitle);
 
 		/* bar */
-		if (cursor.isNull(cursor.getColumnIndex(COLUMN_CATEGORY)))
-			bar.setImageResource(R.drawable.bar_wceu);
-		else if (cursor.getString(cursor.getColumnIndex(COLUMN_CATEGORY))
-				.equals("africa"))
-			bar.setImageResource(R.drawable.bar_africa);
-		else if (cursor.getString(cursor.getColumnIndex(COLUMN_CATEGORY))
-				.equals("america"))
-			bar.setImageResource(R.drawable.bar_america);
-		else if (cursor.getString(cursor.getColumnIndex(COLUMN_CATEGORY))
-				.equals("asia"))
-			bar.setImageResource(R.drawable.bar_asia);
-		else if (cursor.getString(cursor.getColumnIndex(COLUMN_CATEGORY))
-				.equals("auspac"))
-			bar.setImageResource(R.drawable.bar_auspac);
-		else if (cursor.getString(cursor.getColumnIndex(COLUMN_CATEGORY))
-				.equals("europe"))
-			bar.setImageResource(R.drawable.bar_europe);
-		else if (bar != null)
-			bar.setImageResource(R.drawable.bar_wceu);
+		String[] names = context.getResources().getStringArray(
+				R.array.categoryValues);
+		String[] colors = context.getResources().getStringArray(
+				R.array.categoryColors);
+		bar.setBackgroundColor(Color.parseColor(colors[0]));
+		for (int i = 0; i < names.length; i++) {
+			if (names[i].equals(cursor.getString(cursor
+					.getColumnIndex(COLUMN_CATEGORY))))
+				bar.setBackgroundColor(Color.parseColor(colors[i]));
+		}
 
 		/* date */
 		try {
