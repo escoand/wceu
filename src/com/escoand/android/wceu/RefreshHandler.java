@@ -31,7 +31,7 @@ public final class RefreshHandler {
 		String[] urls = context.getResources()
 				.getStringArray(R.array.urlEvents);
 		String[] categories = context.getResources().getStringArray(
-				R.array.categorieValues);
+				R.array.categoryValues);
 		boolean result;
 
 		// refresh news
