@@ -22,7 +22,7 @@ public class CategoryDialog extends DialogFragment {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				listener.onCategorySelected(getResources().getStringArray(
-						R.array.categorieValues)[which]);
+						R.array.categoryValues)[which]);
 			}
 		});
 		adb.setCancelable(true);

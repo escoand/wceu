@@ -43,7 +43,7 @@
         <item>Australia</item>
         <item>Devotions</item>
     </string-array>
-    <string-array name="categorieValues">
+    <string-array name="categoryValues">
         <item></item>
         <item>america</item>
         <item>europe</item>
