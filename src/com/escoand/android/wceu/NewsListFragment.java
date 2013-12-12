@@ -9,6 +9,7 @@ import android.app.ActionBar.OnNavigationListener;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
 import android.app.FragmentTransaction;
+import android.app.ListFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -35,7 +36,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
-public class NewsListFragment extends android.app.ListFragment implements
+public class NewsListFragment extends ListFragment implements
 		CategoryDialogListener {
 
 	private NewsDatabase dbNews;
