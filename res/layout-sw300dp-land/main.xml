@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:orientation="horizontal" >
+
+    <fragment
+        android:id="@+id/mainList"
+        android:layout_width="0px"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        class="com.escoand.android.wceu.NewsListFragment" />
+
+    <fragment
+        android:id="@+id/mainArticle"
+        android:layout_width="0px"
+        android:layout_height="match_parent"
+        android:layout_weight="4"
+        class="com.escoand.android.wceu.ArticleFragment" />
+
+</LinearLayout>
