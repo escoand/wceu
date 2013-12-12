@@ -4,11 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
-import android.app.ActionBar.OnNavigationListener;
-import android.app.ActionBar.Tab;
-import android.app.ActionBar.TabListener;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -17,7 +12,13 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.OnNavigationListener;
+import android.support.v7.app.ActionBar.Tab;
+import android.support.v7.app.ActionBar.TabListener;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -78,7 +79,8 @@ public class NewsListFragment extends ListFragment implements
 		setListAdapter(new NewsListAdapter(getActivity()));
 
 		/* action bar */
-		ActionBar actionBar = getActivity().getActionBar();
+		ActionBar actionBar = ((ActionBarActivity) getActivity())
+				.getSupportActionBar();
 		actionBar.setDisplayShowTitleEnabled(false);
 
 		TabListener tabl = new TabListener() {
