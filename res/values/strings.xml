@@ -52,5 +52,14 @@
         <item>auspac</item>
         <item>devotions</item>
     </string-array>
+    <string-array name="categoryColors">
+        <item>#999999</item>
+        <item>#D93400</item>
+        <item>#1770B4</item>
+        <item>#FFCE00</item>
+        <item>#775533</item>
+        <item>#009C1E</item>
+        <item>#999999</item>
+    </string-array>
 
 </resources>
