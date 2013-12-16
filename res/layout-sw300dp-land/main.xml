@@ -12,11 +12,10 @@
         android:layout_weight="3"
         class="com.escoand.android.wceu.NewsListFragment" />
 
-    <fragment
+    <FrameLayout
         android:id="@+id/mainArticle"
         android:layout_width="0px"
         android:layout_height="match_parent"
-        android:layout_weight="4"
-        class="com.escoand.android.wceu.ArticleFragment" />
+        android:layout_weight="4" />
 
 </LinearLayout>

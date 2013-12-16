@@ -14,7 +14,7 @@ public class ArticleActivity extends Activity {
 		ArticleFragment article = new ArticleFragment();
 		article.setArguments(getIntent().getExtras());
 		getFragmentManager().beginTransaction()
-				.add(android.R.id.content, article).commit();
+				.replace(android.R.id.content, article).commit();
 	}
 
 	@Override

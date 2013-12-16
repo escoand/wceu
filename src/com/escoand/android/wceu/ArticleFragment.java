@@ -72,7 +72,6 @@ public class ArticleFragment extends Fragment {
 								cursor.getColumnIndex(NewsDatabase.COLUMN_TEXT))
 								.replace("href=\"../",
 										"href=\"http://www.worldsceunion.org/"));
-		// TODO html not shown after rotate
 		view.loadData(html, "text/html; charset=utf-8", "UTF-8");
 		cursor.close();
 	}
