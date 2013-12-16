@@ -24,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
@@ -132,6 +133,19 @@ public class NewsListFragment extends ListFragment implements
 			if (displayType.equals("events"))
 				actionBar.setSelectedNavigationItem(1);
 		}
+
+		/* banner */
+		if (getActivity().findViewById(R.id.banner) != null)
+			getActivity().findViewById(R.id.banner).setOnClickListener(
+					new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							CategoryDialog diag = new CategoryDialog();
+							diag.show(
+									getActivity().getSupportFragmentManager(),
+									"");
+						}
+					});
 
 		/* list */
 		PullToRefreshListView list = (PullToRefreshListView) getActivity()
