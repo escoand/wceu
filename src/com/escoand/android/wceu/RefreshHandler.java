@@ -72,11 +72,11 @@ public final class RefreshHandler {
 
 		/* catch errors */
 		catch (ParserConfigurationException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 		} catch (SAXException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 		} catch (IOException e) {
 			// e.printStackTrace();
 			return false;
