@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:padding="10dp"
-        android:text="@string/messageEmpty"
+        android:text="@string/txtEmpty"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </LinearLayout>
