@@ -30,6 +30,7 @@
     <string name="menuRefresh">Refresh</string>
 
     <!-- messages -->
+    <string name="messageEmpty">Please pull down to refresh list.</string>
     <string name="messageEMail">Send email&#8230;</string>
     <string name="messageIOException">Couldn\'t get new data. Maybe network down?</string>
 
