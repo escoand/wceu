@@ -36,16 +36,17 @@ public class Receiver extends BroadcastReceiver {
 		/* refresh */
 		new AsyncTask<Object, Void, Boolean>() {
 			Context context;
-			SharedPreferences prefs;
 			NewsDatabase dbNews;
 			EventsDatabase dbEvents;
+			Long prevRefresh;
 
 			@Override
 			protected Boolean doInBackground(Object... params) {
 				context = (Context) params[0];
-				prefs = (SharedPreferences) params[1];
 				dbNews = new NewsDatabase(context);
 				dbEvents = new EventsDatabase(context);
+				prevRefresh = ((SharedPreferences) params[1]).getLong(
+						"lastrefresh", 0);
 				return RefreshHandler.refreshAll(context, dbNews, dbEvents);
 			}
 
@@ -54,12 +55,10 @@ public class Receiver extends BroadcastReceiver {
 
 				/* check if new data */
 				int cnt = dbNews.getList(
-						NewsDatabase.COLUMN_DATE + ">"
-								+ prefs.getLong("lastrefresh", 0),
+						NewsDatabase.COLUMN_DATE + ">" + prevRefresh,
 						new String[] {}).getCount();
 				cnt += dbEvents.getList(
-						EventsDatabase.COLUMN_DATE + ">"
-								+ prefs.getLong("lastrefresh", 0),
+						EventsDatabase.COLUMN_DATE + ">" + prevRefresh,
 						new String[] {}).getCount();
 				if (cnt < 1)
 					return;
