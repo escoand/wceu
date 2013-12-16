@@ -7,6 +7,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -16,9 +17,12 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
+import android.preference.PreferenceManager;
 
+@SuppressLint("SimpleDateFormat")
 public final class RefreshHandler {
 	final static SimpleDateFormat dfInDate = new SimpleDateFormat("yyyyHHdd");
 	final static SimpleDateFormat dfInDateTime = new SimpleDateFormat(
@@ -34,13 +38,13 @@ public final class RefreshHandler {
 				R.array.categoryValues);
 		boolean result;
 
-		// refresh news
+		/* refresh news */
 		dbNews.clear();
 		result = RefreshNews(dbNews, context.getString(R.string.urlNews));
 		if (!result)
 			return false;
 
-		// refresh events
+		/* refresh events */
 		dbEvents.clear();
 		for (int i = 0; i < urls.length; i++) {
 			result = RefreshEvents(dbEvents, urls[i], categories[i]);
