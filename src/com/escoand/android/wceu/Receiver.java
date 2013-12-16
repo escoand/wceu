@@ -74,9 +74,12 @@ public class Receiver extends BroadcastReceiver {
 				@SuppressWarnings("deprecation")
 				Notification notification = new Notification.Builder(context)
 						.setSmallIcon(R.drawable.ic_launcher)
+						.setTicker(context.getString(R.string.txtRefreshed))
 						.setContentTitle(context.getString(R.string.app_name))
-						.setContentText("News and events available!")
-						.setContentIntent(pIntent).getNotification();
+						.setContentText(
+								context.getString(R.string.txtRefreshed))
+						.setContentIntent(pIntent).setAutoCancel(true)
+						.getNotification();
 
 				/* show notification */
 				((NotificationManager) context
