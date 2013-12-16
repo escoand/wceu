@@ -72,6 +72,7 @@ public class Receiver extends BroadcastReceiver {
 
 				/* create notification */
 				// TODO use .build() instead of .getNotification() with api16+
+				@SuppressWarnings("deprecation")
 				Notification notification = new Notification.Builder(context)
 						.setSmallIcon(R.drawable.ic_launcher)
 						.setContentTitle(context.getString(R.string.app_name))
