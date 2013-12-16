@@ -141,9 +141,7 @@ public class NewsListFragment extends ListFragment implements
 						@Override
 						public void onClick(View v) {
 							CategoryDialog diag = new CategoryDialog();
-							diag.show(
-									getActivity().getSupportFragmentManager(),
-									"");
+							diag.show(getActivity().getFragmentManager(), "");
 						}
 					});
 
