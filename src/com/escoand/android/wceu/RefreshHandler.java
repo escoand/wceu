@@ -48,6 +48,10 @@ public final class RefreshHandler {
 				return false;
 		}
 
+		/* save time */
+		(PreferenceManager.getDefaultSharedPreferences(context)).edit()
+				.putLong("lastrefresh", new Date().getTime()).commit();
+
 		return result;
 	}
 
