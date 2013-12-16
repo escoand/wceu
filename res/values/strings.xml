@@ -29,10 +29,11 @@
     <string name="menuContact">Contact</string>
     <string name="menuRefresh">Refresh</string>
 
-    <!-- messages -->
-    <string name="messageEmpty">Currently there is nothing within this category.\n\nYou can try to refresh by pulling down.</string>
-    <string name="messageEMail">Send email&#8230;</string>
-    <string name="messageIOException">Unable to refresh news and events.\nDo you have an internet connection?</string>
+    <!-- text -->
+    <string name="txtEmpty">Currently there is nothing within this category.\n\nYou can try to refresh by pulling down.</string>
+    <string name="txtEMail">Send email&#8230;</string>
+    <string name="txtRefreshed">News and events available!</string>
+    <string name="errIOException">Unable to refresh news and events.\nDo you have an internet connection?</string>
 
     <!-- categories -->
     <string-array name="categories">

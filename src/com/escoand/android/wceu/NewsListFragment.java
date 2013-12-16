@@ -186,7 +186,7 @@ public class NewsListFragment extends ListFragment implements
 			Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
 					"mailto", "centraloffice@worldsceunion.org", null));
 			startActivity(Intent.createChooser(intent,
-					getString(R.string.messageEMail)));
+					getString(R.string.txtEMail)));
 			break;
 		}
 
@@ -316,7 +316,7 @@ public class NewsListFragment extends ListFragment implements
 				/* show error */
 				if (!result)
 					Toast.makeText(getActivity(),
-							getString(R.string.messageIOException),
+							getString(R.string.errIOException),
 							Toast.LENGTH_LONG).show();
 
 				/* refresh listing */
