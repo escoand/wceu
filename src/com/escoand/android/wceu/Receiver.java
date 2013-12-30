@@ -64,9 +64,13 @@ public class Receiver extends BroadcastReceiver {
 					return;
 
 				/* create pending intent */
-				PendingIntent pIntent = PendingIntent.getActivity(context, 0,
-						new Intent(context, MainActivity.class)
-								.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
+				// TODO re-start activity to get updated list
+				PendingIntent pIntent = PendingIntent.getActivity(
+						context,
+						0,
+						new Intent(context, MainActivity.class).setFlags(
+								Intent.FLAG_ACTIVITY_NEW_TASK).setFlags(
+								Intent.FLAG_ACTIVITY_CLEAR_TASK),
 						PendingIntent.FLAG_UPDATE_CURRENT);
 
 				/* create notification */
