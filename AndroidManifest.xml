@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.escoand.android.wceu"
     android:versionCode="110104"
-    android:versionName="1.4-devel" >
+    android:versionName="1.4" >
 
     <uses-sdk
         android:minSdkVersion="11"
